@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Andrew — IT & Network Infrastructure Portfolio</title>
+<meta name="description" content="Portfolio of network infrastructure, systems administration, and automation projects.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink: #0F1B2D;
+    --ink-2: #142A44;
+    --panel: #142A44;
+    --panel-2: #182F4C;
+    --line: rgba(147,178,209,0.14);
+    --line-strong: rgba(147,178,209,0.28);
+    --paper: #E9EEF4;
+    --muted: #91A5BC;
+    --muted-2: #6D839C;
+    --copper: #D99A54;
+    --copper-dim: rgba(217,154,84,0.16);
+    --teal: #5FA8A0;
+    --good: #74C69D;
+    --radius: 2px;
+    --mono: 'IBM Plex Mono', ui-monospace, monospace;
+    --sans: 'IBM Plex Sans', system-ui, sans-serif;
+  }
+
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+
+  body{
+    margin:0;
+    background:
+      linear-gradient(var(--line) 1px, transparent 1px) 0 0/48px 48px,
+      linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0/48px 48px,
+      var(--ink);
+    color:var(--paper);
+    font-family:var(--sans);
+    font-size:16px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  a{ color:var(--copper); text-decoration:none; }
+  a:hover{ text-decoration:underline; }
+
+  a:focus-visible, button:focus-visible{
+    outline:2px solid var(--copper);
+    outline-offset:3px;
+  }
+
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:12px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--copper);
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin:0 0 18px;
+  }
+  .eyebrow::before{
+    content:"";
+    width:20px;
+    height:1px;
+    background:var(--copper);
+    display:inline-block;
+  }
+
+  .wrap{
+    max-width:1080px;
+    margin:0 auto;
+    padding:0 32px;
+  }
+
+  /* ---------- NAV ---------- */
+  header.site{
+    position:sticky;
+    top:0;
+    z-index:50;
+    backdrop-filter:blur(8px);
+    background:rgba(15,27,45,0.82);
+    border-bottom:1px solid var(--line);
+  }
+  .navbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:18px 32px;
+    max-width:1080px;
+    margin:0 auto;
+  }
+  .logo{
+    font-family:var(--mono);
+    font-weight:600;
+    font-size:15px;
+    color:var(--paper);
+    letter-spacing:0.02em;
+  }
+  .logo span{ color:var(--copper); }
+  nav.links{
+    display:flex;
+    gap:28px;
+    font-family:var(--mono);
+    font-size:13px;
+  }
+  nav.links a{
+    color:var(--muted);
+    letter-spacing:0.03em;
+  }
+  nav.links a:hover{ color:var(--paper); text-decoration:none; }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    padding:96px 0 88px;
+  }
+  .hero-grid{
+    display:grid;
+    grid-template-columns:1.1fr 0.9fr;
+    gap:56px;
+    align-items:center;
+  }
+  .hero h1{
+    font-family:var(--mono);
+    font-size:clamp(30px, 4vw, 46px);
+    line-height:1.18;
+    margin:0 0 22px;
+    font-weight:600;
+    letter-spacing:-0.01em;
+  }
+  .hero h1 .accent{ color:var(--copper); }
+  .hero p.lede{
+    font-size:17px;
+    color:var(--muted);
+    max-width:46ch;
+    margin:0 0 32px;
+  }
+  .status-line{
+    font-family:var(--mono);
+    font-size:12.5px;
+    color:var(--muted-2);
+    display:flex;
+    align-items:center;
+    gap:9px;
+    margin-bottom:30px;
+  }
+  .dot{
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:var(--good);
+    box-shadow:0 0 0 3px rgba(116,198,157,0.15);
+  }
+  .cta-row{
+    display:flex;
+    gap:14px;
+    flex-wrap:wrap;
+  }
+  .btn{
+    font-family:var(--mono);
+    font-size:13px;
+    letter-spacing:0.03em;
+    padding:12px 20px;
+    border-radius:var(--radius);
+    border:1px solid var(--line-strong);
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .btn.primary{
+    background:var(--copper);
+    color:var(--ink);
+    border-color:var(--copper);
+    font-weight:600;
+  }
+  .btn.primary:hover{ background:#e5a862; text-decoration:none; }
+  .btn.ghost{ color:var(--paper); }
+  .btn.ghost:hover{ border-color:var(--copper); text-decoration:none; color:var(--copper); }
+
+  /* ---------- HERO DIAGRAM ---------- */
+  .diagram-frame{
+    position:relative;
+    border:1px solid var(--line-strong);
+    background:var(--panel);
+    padding:20px;
+    border-radius:var(--radius);
+  }
+  .diagram-frame .corner{
+    position:absolute;
+    width:14px;
+    height:14px;
+    border:1.5px solid var(--copper);
+    opacity:0.8;
+  }
+  .corner.tl{ top:-1px; left:-1px; border-right:none; border-bottom:none; }
+  .corner.tr{ top:-1px; right:-1px; border-left:none; border-bottom:none; }
+  .corner.bl{ bottom:-1px; left:-1px; border-right:none; border-top:none; }
+  .corner.br{ bottom:-1px; right:-1px; border-left:none; border-top:none; }
+  .diagram-label{
+    font-family:var(--mono);
+    font-size:11px;
+    color:var(--muted-2);
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    margin-bottom:10px;
+  }
+  svg.net{ width:100%; height:auto; display:block; }
+  .node-label{
+    font-family:var(--mono);
+    font-size:9.5px;
+    fill:var(--muted);
+  }
+  .node-box{
+    fill:var(--panel-2);
+    stroke:var(--line-strong);
+    stroke-width:1;
+  }
+  .node-box.active{ stroke:var(--copper); }
+  .link-line{
+    stroke:var(--line-strong);
+    stroke-width:1.2;
+    fill:none;
+  }
+  .pulse{
+    fill:var(--copper);
+  }
+
+  @media (prefers-reduced-motion: no-preference){
+    .pulse{ animation:none; }
+  }
+
+  /* ---------- SECTIONS ---------- */
+  section{ padding:84px 0; }
+  section.alt{ border-top:1px solid var(--line); border-bottom:1px solid var(--line); background:rgba(255,255,255,0.012); }
+
+  h2.section-title{
+    font-family:var(--mono);
+    font-size:clamp(22px, 3vw, 30px);
+    margin:0 0 12px;
+    font-weight:600;
+  }
+  p.section-sub{
+    color:var(--muted);
+    max-width:60ch;
+    margin:0 0 52px;
+  }
+
+  /* ---------- PROJECTS (timeline) ---------- */
+  .timeline{
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    gap:0;
+  }
+  .timeline::before{
+    content:"";
+    position:absolute;
+    left:11px;
+    top:14px;
+    bottom:14px;
+    width:1px;
+    background:repeating-linear-gradient(to bottom, var(--line-strong) 0 6px, transparent 6px 11px);
+  }
+  .project{
+    position:relative;
+    padding:0 0 56px 48px;
+  }
+  .project:last-child{ padding-bottom:0; }
+  .project::before{
+    content:"";
+    position:absolute;
+    left:5px;
+    top:6px;
+    width:13px;
+    height:13px;
+    border-radius:50%;
+    background:var(--ink);
+    border:2px solid var(--copper);
+  }
+  .project-meta{
+    font-family:var(--mono);
+    font-size:12px;
+    color:var(--muted-2);
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+    margin-bottom:8px;
+  }
+  .project h3{
+    font-size:21px;
+    margin:0 0 6px;
+    font-weight:600;
+    color:var(--paper);
+  }
+  .project .role{
+    font-size:14px;
+    color:var(--muted);
+    margin:0 0 18px;
+  }
+  .project-panel{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:24px 26px;
+  }
+  .project ul{
+    margin:0 0 20px;
+    padding-left:18px;
+    color:var(--muted);
+  }
+  .project ul li{ margin-bottom:9px; font-size:14.5px; }
+  .project ul li::marker{ color:var(--copper); }
+  .tags{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+  }
+  .tag{
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:0.02em;
+    padding:5px 10px;
+    border:1px solid var(--line-strong);
+    border-radius:var(--radius);
+    color:var(--teal);
+    background:rgba(95,168,160,0.06);
+  }
+
+  /* ---------- SKILLS ---------- */
+  .skills-grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:28px 40px;
+  }
+  .skill-group h4{
+    font-family:var(--mono);
+    font-size:13px;
+    color:var(--copper);
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    margin:0 0 14px;
+    padding-bottom:10px;
+    border-bottom:1px solid var(--line);
+  }
+  .chip-row{ display:flex; flex-wrap:wrap; gap:8px; }
+  .chip{
+    font-size:13.5px;
+    color:var(--paper);
+    background:var(--panel);
+    border:1px solid var(--line);
+    padding:7px 13px;
+    border-radius:var(--radius);
+  }
+
+  /* ---------- ABOUT ---------- */
+  .about-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:56px;
+    align-items:start;
+  }
+  .about-grid p{ color:var(--muted); margin:0 0 16px; }
+  .about-grid p strong{ color:var(--paper); }
+  .fact-list{
+    list-style:none;
+    margin:0;
+    padding:0;
+    font-family:var(--mono);
+    font-size:13px;
+  }
+  .fact-list li{
+    display:flex;
+    justify-content:space-between;
+    padding:12px 0;
+    border-bottom:1px solid var(--line);
+    color:var(--muted);
+  }
+  .fact-list li span:last-child{ color:var(--paper); text-align:right; }
+
+  /* ---------- CONTACT / FOOTER ---------- */
+  footer{
+    padding:64px 0 48px;
+  }
+  .contact-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:16px;
+    margin-bottom:40px;
+  }
+  .foot-note{
+    font-family:var(--mono);
+    font-size:11.5px;
+    color:var(--muted-2);
+    border-top:1px solid var(--line);
+    padding-top:24px;
+  }
+
+  @media (max-width: 880px){
+    .hero-grid{ grid-template-columns:1fr; }
+    .about-grid{ grid-template-columns:1fr; }
+    .skills-grid{ grid-template-columns:1fr; }
+    nav.links{ display:none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="navbar">
+    <div class="logo">andrew<span>@</span>infra</div>
+    <nav class="links">
+      <a href="#projects">Projects</a>
+      <a href="#skills">Skills</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <div class="status-line"><span class="dot"></span> AVAILABLE FOR ENTRY-LEVEL IT ROLES</div>
+        <h1>I build the network<br>infrastructure most people<br>never think about<span class="accent">.</span></h1>
+        <p class="lede">IT student and infrastructure hobbyist based in California, currently completing a B.S. in Information Technology at Full Sail University. I design, deploy, and document real systems — from a full office LAN build to a home lab running my own backups.</p>
+        <div class="cta-row">
+          <a href="#projects" class="btn primary">View projects</a>
+          <a href="YOUR-RESUME-LINK.pdf" class="btn ghost">Download résumé</a>
+          <a href="https://linkedin.com/in/YOUR-LINKEDIN" class="btn ghost">LinkedIn</a>
+        </div>
+      </div>
+
+      <div class="diagram-frame">
+        <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+        <div class="diagram-label">// network topology — home lab</div>
+        <svg class="net" viewBox="0 0 460 320" role="img" aria-label="Diagram of a home network: two workstations connect through a switch to a firewall, which connects to the internet; the switch also connects to a NAS and backup server.">
+          <!-- links -->
+          <path class="link-line" d="M90,60 L230,140"/>
+          <path class="link-line" d="M370,60 L230,140"/>
+          <path class="link-line" d="M230,140 L230,60"/>
+          <path class="link-line" d="M230,140 L120,220"/>
+          <path class="link-line" d="M230,140 L340,220"/>
+          <path class="link-line" d="M230,60 L230,20"/>
+
+          <!-- internet -->
+          <g>
+            <rect class="node-box" x="195" y="4" width="70" height="26" rx="2"/>
+            <text class="node-label" x="230" y="21" text-anchor="middle">INTERNET</text>
+          </g>
+
+          <!-- firewall -->
+          <g>
+            <rect class="node-box active" x="195" y="44" width="70" height="26" rx="2"/>
+            <text class="node-label" x="230" y="61" text-anchor="middle">FIREWALL</text>
+          </g>
+
+          <!-- workstation left -->
+          <g>
+            <rect class="node-box" x="55" y="44" width="80" height="26" rx="2"/>
+            <text class="node-label" x="95" y="61" text-anchor="middle">WORKSTATION</text>
+          </g>
+
+          <!-- workstation right -->
+          <g>
+            <rect class="node-box" x="335" y="44" width="80" height="26" rx="2"/>
+            <text class="node-label" x="375" y="61" text-anchor="middle">WORKSTATION</text>
+          </g>
+
+          <!-- switch -->
+          <g>
+            <rect class="node-box active" x="192" y="126" width="76" height="28" rx="2"/>
+            <text class="node-label" x="230" y="144" text-anchor="middle">SWITCH</text>
+          </g>
+
+          <!-- NAS -->
+          <g>
+            <rect class="node-box" x="82" y="206" width="80" height="28" rx="2"/>
+            <text class="node-label" x="122" y="224" text-anchor="middle">NAS (OMV)</text>
+          </g>
+
+          <!-- backup -->
+          <g>
+            <rect class="node-box" x="300" y="206" width="90" height="28" rx="2"/>
+            <text class="node-label" x="345" y="224" text-anchor="middle">TIME MACHINE</text>
+          </g>
+
+          <!-- animated data pulses along links -->
+          <circle class="pulse" r="2.6">
+            <animateMotion dur="3.2s" repeatCount="indefinite" path="M230,140 L120,220"/>
+          </circle>
+          <circle class="pulse" r="2.6">
+            <animateMotion dur="2.6s" repeatCount="indefinite" begin="0.6s" path="M90,60 L230,140"/>
+          </circle>
+          <circle class="pulse" r="2.6">
+            <animateMotion dur="2.8s" repeatCount="indefinite" begin="1.2s" path="M230,140 L340,220"/>
+          </circle>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects" class="alt">
+    <div class="wrap">
+      <div class="eyebrow">Projects</div>
+      <h2 class="section-title">Three systems, one thread</h2>
+      <p class="section-sub">Each project below shipped as a working system — planned, built, and documented the way I'd approach it on the job. Laid out in the order I built them.</p>
+
+      <div class="timeline">
+
+        <div class="project">
+          <div class="project-meta">June 2025 – Present · Full Sail University Capstone</div>
+          <h3>Full LAN Design & Deployment</h3>
+          <p class="role">Marconi Law Firm (simulated client) — full office network build, from procurement to migration</p>
+          <div class="project-panel">
+            <ul>
+              <li>Designed and deployed a full LAN for a 4,000 sq/ft, 10-user legal office from the ground up — planning, procurement, and configuration, end to end.</li>
+              <li>Configured a Windows Server 2025 domain controller with RAID 5 for redundant storage and centralized user management.</li>
+              <li>Deployed a SonicWall firewall and enforced FIPS 140-2 compliance with role-based access controls to protect sensitive client data.</li>
+              <li>Engineered the hardware procurement strategy, cutting total deployment time by 15%.</li>
+              <li>Ran a full infrastructure audit to isolate security bottlenecks — achieved 100% uptime through the office migration.</li>
+            </ul>
+            <div class="tags">
+              <span class="tag">Windows Server</span>
+              <span class="tag">Active Directory</span>
+              <span class="tag">RAID 5</span>
+              <span class="tag">SonicWall</span>
+              <span class="tag">FIPS 140-2</span>
+              <span class="tag">Network Design</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="project">
+          <div class="project-meta">2026 · Personal Project</div>
+          <h3>Home Lab NAS & Automated Backup Server</h3>
+          <p class="role">Built to merge two interests — photography and IT — into one problem worth solving: reliable access to my own files from any machine in the house.</p>
+          <div class="project-panel">
+            <ul>
+              <li>Architected and deployed a NAS and automated backup server on an x86 mini PC running Debian Linux with OpenMediaVault (OMV).</li>
+              <li>Managed two independent 4TB EXT4 volumes mounted by immutable UUID — one shared via SMB for centralized media storage, the other configured for native Apple Time Machine backup via the vfs_fruit Samba module.</li>
+              <li>Migrated roughly 1.1TB of data via rsync in detached screen sessions for reliable, uninterrupted background transfers.</li>
+              <li>Implemented POSIX permission structures (775, root:users) and configured S.M.A.R.T. disk telemetry for proactive hardware health monitoring.</li>
+            </ul>
+            <div class="tags">
+              <span class="tag">Debian Linux</span>
+              <span class="tag">OpenMediaVault</span>
+              <span class="tag">Samba/SMB</span>
+              <span class="tag">rsync</span>
+              <span class="tag">NAS</span>
+              <span class="tag">S.M.A.R.T.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="project">
+          <div class="project-meta">2026 · Personal Project</div>
+          <h3>Salesforce CSM Onboarding & Command Center</h3>
+          <p class="role">A modeled post-sales workflow — from a closed deal to a working onboarding process, with leadership reporting built in.</p>
+          <div class="project-panel">
+            <ul>
+              <li>Designed a custom data model with two related objects (Client Onboarding Project, Onboarding Milestone) linked to standard Account and Opportunity records via Lookup and Master-Detail relationships.</li>
+              <li>Built a Record-Triggered Flow that auto-provisions an onboarding project and initial milestone the moment an Opportunity reaches Closed Won — removing the manual handoff between Sales and Customer Success.</li>
+              <li>Developed custom reports and an executive "CSM Command Center" dashboard for real-time visibility into onboarding volume, milestone completion, and handoff velocity.</li>
+              <li>Modeled the full post-sales process end to end — trigger logic through leadership-facing reporting.</li>
+            </ul>
+            <div class="tags">
+              <span class="tag">Salesforce.com</span>
+              <span class="tag">Flow Builder</span>
+              <span class="tag">Data Modeling</span>
+              <span class="tag">Process Automation</span>
+              <span class="tag">Dashboards</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills">
+    <div class="wrap">
+      <div class="eyebrow">Skills</div>
+      <h2 class="section-title">What these projects draw on</h2>
+      <p class="section-sub">Grouped by the part of the stack each skill lives in — not a keyword dump.</p>
+
+      <div class="skills-grid">
+        <div class="skill-group">
+          <h4>Networking & Infrastructure</h4>
+          <div class="chip-row">
+            <span class="chip">Network Design</span>
+            <span class="chip">Firewall Administration</span>
+            <span class="chip">Network Security</span>
+            <span class="chip">RAID</span>
+            <span class="chip">IT Infrastructure</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <h4>Systems Administration</h4>
+          <div class="chip-row">
+            <span class="chip">Windows Server</span>
+            <span class="chip">Active Directory</span>
+            <span class="chip">Linux (Debian)</span>
+            <span class="chip">Samba / SMB</span>
+            <span class="chip">Bash</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <h4>Security & Compliance</h4>
+          <div class="chip-row">
+            <span class="chip">FIPS 140-2</span>
+            <span class="chip">Role-Based Access Control</span>
+            <span class="chip">Regulatory Compliance</span>
+            <span class="chip">Information Security</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <h4>Automation & CRM</h4>
+          <div class="chip-row">
+            <span class="chip">Salesforce Administration</span>
+            <span class="chip">Salesforce Flow</span>
+            <span class="chip">Business Process Improvement</span>
+            <span class="chip">Data Modeling</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" class="alt">
+    <div class="wrap about-grid">
+      <div>
+        <div class="eyebrow">About</div>
+        <h2 class="section-title">From behind the camera to behind the rack</h2>
+        <p>I started out running a freelance photography business, which meant I was, without really thinking of it that way, already managing storage, backups, and file organization at a small scale. Making the jump into IT felt less like starting over and more like naming what I'd already been doing.</p>
+        <p>Before that, I spent time in <strong>B2B inside sales</strong>, <strong>HIPAA-adjacent customer support</strong>, and <strong>manufacturing</strong> — work that taught me how to move fast under pressure and communicate clearly with non-technical people, which turns out to matter as much in IT as any certification does.</p>
+        <p>I'm currently finishing a <strong>B.S. in Information Technology at Full Sail University</strong> with concentrations in Network Administration and Cybersecurity, while working in delivery and logistics and building projects like these on the side.</p>
+      </div>
+      <div>
+        <ul class="fact-list">
+          <li><span>Degree</span><span>B.S. Information Technology — Full Sail University, expected 2027</span></li>
+          <li><span>Focus</span><span>Network Administration &amp; Cybersecurity</span></li>
+          <li><span>Certifications</span><span>CompTIA A+, Network+, Security+ (in progress)</span></li>
+          <li><span>Current role</span><span>Delivery & Logistics Specialist</span></li>
+          <li><span>Background</span><span>Photography · Sales · Support · Manufacturing</span></li>
+          <li><span>Location</span><span>California, USA</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <footer id="contact">
+    <div class="wrap">
+      <div class="eyebrow">Contact</div>
+      <h2 class="section-title">Let's talk</h2>
+      <p class="section-sub">Open to entry-level IT, network administration, and systems support roles.</p>
+      <div class="contact-row">
+        <a href="mailto:YOUR-EMAIL@example.com" class="btn ghost">YOUR-EMAIL@example.com</a>
+        <a href="https://linkedin.com/in/YOUR-LINKEDIN" class="btn ghost">LinkedIn</a>
+        <a href="https://github.com/YOUR-GITHUB" class="btn ghost">GitHub</a>
+      </div>
+      <div class="foot-note">// Built and deployed as its own small infrastructure project — static site, hosted on GitHub Pages.</div>
+    </div>
+  </footer>
+
+</main>
+
+</body>
+</html>
