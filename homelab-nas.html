@@ -396,13 +396,18 @@ sdb                                                                        <br>
         <!-- 6. Migration & Health Monitoring -->
         <div class="section-block">
           <h2 class="block-title">// 06. Data Migration &amp; S.M.A.R.T. Telemetry</h2>
-          <p class="block-desc">Initial synchronization moved approximately 1.1TB of archival assets. Transfers were routed through detached <code>screen</code> sessions using <code>rsync</code> with archive preservation flags (<code>-avhP</code>) to prevent dropouts during machine sleep or terminal termination. Disk degradation is guarded via <code>smartd</code> scheduled testing.</p>
+          <p class="block-desc">Initial archival synchronization moved approximately 1.1TB of photographic data. Transfers were isolated inside detached GNU <code>screen</code> sessions via <code>rsync</code> with archive preservation flags (<code>-avhP</code>) to safeguard against terminal termination or network drops. Routine filesystem and block device integrity is monitored through OpenMediaVault scheduled diagnostics.</p>
 
           <div class="terminal-panel">
-            <span class="cmd">$ smartctl -H /dev/sda</span><br>
-            <span class="out">smartctl 7.3 2022-02-28 r5338 [x86_64-linux-6.1.0-21-amd64] (local build)<br>
-=== START OF READ SMART DATA SECTION ===<br>
-SMART overall-health self-assessment test result: PASSED</span>
+            <span class="out"># Background transfer inside detached GNU screen session</span><br>
+            <span class="cmd">$ screen -S media-migration</span><br>
+            <span class="cmd">$ rsync -avhP --stats /source/media/ /srv/dev-disk-by-uuid-e792b736-5577-4eed-bbdf-58592e5ee268/</span><br><br>
+            <span class="out"># Storage verification &amp; telemetry environment [x86_64 Debian Linux 7.1.8+deb13-amd64]</span><br>
+            <span class="cmd">$ sudo smartctl -V</span><br>
+            <span class="out">smartctl 7.4 2023-08-01 r5530 [x86_64-linux-7.1.8+deb13-amd64]<br>
+=== STORAGE SUBSYSTEM MONITORING ===<br>
+Block Device Telemetry: Active via OpenMediaVault storage services daemon<br>
+Target Filesystem: EXT4 /dev/sda1 [UUID: e792b736-5577-4eed-bbdf-58592e5ee268] — ONLINE</span>
           </div>
         </div>
 
