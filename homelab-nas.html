@@ -355,14 +355,14 @@
           
           <div class="terminal-panel">
             <span class="cmd">$ sudo blkid /dev/sd*</span><br>
-            <span class="out">/dev/sda1: UUID="c3a2f891-..." BLOCK_SIZE="4096" TYPE="ext4" PARTUUID="0001a4bc-01"<br>
-/dev/sdb1: UUID="9e4f210d-..." BLOCK_SIZE="4096" TYPE="ext4" PARTUUID="0002b8dc-01"</span><br><br>
+            <span class="out">/dev/sda1: UUID="e792b736-5577-4eed-bbdf-58592e5ee268" BLOCK_SIZE="4096" TYPE="ext4" PARTUUID="0001a4bc-01"<br>
+/dev/sdb1: UUID="c987f9e0-17b7-4acd-8539-2852278908be" BLOCK_SIZE="4096" TYPE="ext4" PARTUUID="0002b8dc-01"</span><br><br>
             <span class="cmd">$ sudo lsblk -f</span><br>
-            <span class="out">NAME   FSTYPE FSVER LABEL       UUID                                 MOUNTPOINTS<br>
-sda                                                                           <br>
-└─sda1 ext4   1.0   MEDIA_POOL  c3a2f891-38da-46df-9a11-5321a084fb12 /srv/media<br>
-sdb                                                                           <br>
-└─sdb1 ext4   1.0   BACKUP_POOL 9e4f210d-14a0-410c-8d19-3bf68019a2e4 /srv/timemachine</span>
+            <span class="out">NAME   FSTYPE FSVER LABEL UUID                                 MOUNTPOINTS<br>
+sda                                                                        <br>
+└─sda1 ext4   1.0         e792b736-5577-4eed-bbdf-58592e5ee268 /srv/dev-disk-by-uuid-e792b736-5577-4eed-bbdf-58592e5ee268<br>
+sdb                                                                        <br>
+└─sdb1 ext4   1.0         c987f9e0-17b7-4acd-8539-2852278908be /srv/dev-disk-by-uuid-c987f9e0-17b7-4acd-8539-2852278908be</span>
           </div>
         </div>
 
