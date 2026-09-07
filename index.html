@@ -429,7 +429,7 @@
       <div>
         <div class="status-line"><span class="dot"></span> AVAILABLE FOR ENTRY-LEVEL IT ROLES</div>
         <h1>I build the network<br>infrastructure most people<br>never think about<span class="accent">.</span></h1>
-        <p class="lede">IT student based in California completing a B.S. in Information Technology at Full Sail University. I build and document practical network setups, ranging from small-office LAN depoloyments to dedicated home lab backup systems.</p>
+        <p class="lede">IT student based in California completing a B.S. in Information Technology at Full Sail University. I build and document practical network setups, ranging from small-office LAN deployments to dedicated home lab backup systems.</p>
         <div class="cta-row">
           <a href="#projects" class="btn primary">View projects</a>
           <a href="AndrewWilkinsResume.pdf" class="btn ghost" target="_blank" rel="noopener">Download résumé</a>
@@ -439,60 +439,70 @@
 
       <div class="diagram-frame">
         <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
-        <div class="diagram-label">// network topology — home lab</div>
-        <svg class="net" viewBox="0 0 460 320" role="img" aria-label="Diagram of a home network: two workstations connect through a switch to a firewall, which connects to the internet; the switch als[...]
-          <!-- links -->
-          <path class="link-line" d="M90,60 L230,140"/>
-          <path class="link-line" d="M370,60 L230,140"/>
-          <path class="link-line" d="M230,140 L230,60"/>
-          <path class="link-line" d="M230,140 L120,220"/>
-          <path class="link-line" d="M230,140 L340,220"/>
-          <path class="link-line" d="M230,60 L230,20"/>
+          <div class="diagram-label">// network topology — home lab</div>
+          <svg class="net" viewBox="0 0 460 280" role="img" aria-label="Diagram of a home network topology">
+            <!-- links -->
+            <path class="link-line" d="M230,30 L230,58" />
+            <path class="link-line" d="M230,86 L230,126" />
+            <path class="link-line" d="M192,140 L135,70" />
+            <path class="link-line" d="M268,140 L325,70" />
+            <path class="link-line" d="M210,154 L122,206" />
+            <path class="link-line" d="M250,154 L345,206" />
 
-          <!-- internet -->
-          <g>
-            <rect class="node-box" x="195" y="4" width="70" height="26" rx="2"/>
-            <text class="node-label" x="230" y="21" text-anchor="middle">INTERNET</text>
-          </g>
+            <!-- internet -->
+            <g>
+              <rect class="node-box" x="195" y="4" width="70" height="26" rx="2" />
+              <text class="node-label" x="230" y="21" text-anchor="middle">INTERNET</text>
+            </g>
 
-          <!-- firewall -->
-          <g>
-            <rect class="node-box active" x="195" y="44" width="70" height="26" rx="2"/>
-            <text class="node-label" x="230" y="61" text-anchor="middle">FIREWALL</text>
-          </g>
+            <!-- firewall -->
+            <g>
+              <rect class="node-box active" x="195" y="58" width="70" height="28" rx="2" />
+              <text class="node-label" x="230" y="76" text-anchor="middle">FIREWALL</text>
+            </g>
 
-          <!-- workstation left -->
-          <g>
-            <rect class="node-box" x="55" y="44" width="80" height="26" rx="2"/>
-            <text class="node-label" x="95" y="61" text-anchor="middle">WORKSTATION</text>
-          </g>
+            <!-- workstation left -->
+            <g>
+              <rect class="node-box" x="55" y="44" width="80" height="26" rx="2" />
+              <text class="node-label" x="95" y="61" text-anchor="middle">WORKSTATION</text>
+            </g>
 
-          <!-- workstation right -->
-          <g>
-            <rect class="node-box" x="335" y="44" width="80" height="26" rx="2"/>
-            <text class="node-label" x="375" y="61" text-anchor="middle">WORKSTATION</text>
-          </g>
+            <!-- workstation right -->
+            <g>
+              <rect class="node-box" x="325" y="44" width="80" height="26" rx="2" />
+              <text class="node-label" x="365" y="61" text-anchor="middle">WORKSTATION</text>
+            </g>
 
-          <!-- switch -->
-          <g>
-            <rect class="node-box active" x="192" y="126" width="76" height="28" rx="2"/>
-            <text class="node-label" x="230" y="144" text-anchor="middle">SWITCH</text>
-          </g>
+            <!-- switch -->
+            <g>
+              <rect class="node-box active" x="192" y="126" width="76" height="28" rx="2" />
+              <text class="node-label" x="230" y="144" text-anchor="middle">SWITCH</text>
+            </g>
 
-          <!-- NAS -->
-          <g>
-            <rect class="node-box" x="82" y="206" width="80" height="28" rx="2"/>
-            <text class="node-label" x="122" y="224" text-anchor="middle">NAS (OMV)</text>
-          </g>
+            <!-- NAS -->
+            <g>
+              <rect class="node-box" x="82" y="206" width="80" height="28" rx="2" />
+              <text class="node-label" x="122" y="224" text-anchor="middle">NAS (OMV)</text>
+            </g>
 
-          <!-- backup -->
-          <g>
-            <rect class="node-box" x="300" y="206" width="90" height="28" rx="2"/>
-            <text class="node-label" x="345" y="224" text-anchor="middle">TIME MACHINE</text>
-          </g>
+            <!-- backup -->
+            <g>
+              <rect class="node-box" x="300" y="206" width="90" height="28" rx="2" />
+              <text class="node-label" x="345" y="224" text-anchor="middle">TIME MACHINE</text>
+            </g>
 
-          <!-- animated data pulses along links -->
-          <circle class="pulse" r="2.6">
+            <!-- animated data pulses along links -->
+            <circle class="pulse" r="3">
+              <animateMotion dur="2.8s" repeatCount="indefinite" path="M230,86 L230,126" />
+            </circle>
+            <circle class="pulse" r="3">
+              <animateMotion dur="3.2s" repeatCount="indefinite" begin="0.5s" path="M210,154 L122,206" />
+            </circle>
+            <circle class="pulse" r="3">
+              <animateMotion dur="3.0s" repeatCount="indefinite" begin="1.2s" path="M250,154 L345,206" />
+            </circle>
+          </svg>
+        </div>
             <animateMotion dur="3.2s" repeatCount="indefinite" path="M230,140 L120,220"/>
           </circle>
           <circle class="pulse" r="2.6">
