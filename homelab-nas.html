@@ -1,1 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home Lab NAS & Automated Backup Server — Andrew Wilkins</title>
+  <meta name="description" content="Technical deep-dive, architecture, and configuration for an x86 Debian Linux / OpenMediaVault NAS and backup appliance.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #0F1B2D;
+      --ink-2: #142A44;
+      --panel: #142A44;
+      --panel-2: #182F4C;
+      --line: rgba(147,178,209,0.14);
+      --line-strong: rgba(147,178,209,0.28);
+      --paper: #E9EEF4;
+      --muted: #91A5BC;
+      --muted-2: #6D839C;
+      --copper: #D99A54;
+      --copper-dim: rgba(217,154,84,0.16);
+      --teal: #5FA8A0;
+      --good: #74C69D;
+      --radius: 2px;
+      --mono: 'IBM Plex Mono', ui-monospace, monospace;
+      --sans: 'IBM Plex Sans', system-ui, sans-serif;
+    }
 
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: linear-gradient(var(--line) 1px, transparent 1px) 0 0/48px 48px,
+                  linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0/48px 48px,
+                  var(--ink);
+      color: var(--paper);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: var(--copper); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    a:focus-visible, button:focus-visible { outline: 2px solid var(--copper); outline-offset: 3px; }
+
+    .wrap { max-width: 1080px; margin: 0 auto; padding: 0 32px; }
+
+    /* NAV */
+    header.site {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(8px);
+      background: rgba(15,27,45,0.82);
+      border-bottom: 1px solid var(--line);
+    }
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 32px;
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+    .logo {
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--paper);
+      letter-spacing: 0.02em;
+    }
+    nav.links { display: flex; gap: 24px; font-family: var(--mono); font-size: 13px; }
+    nav.links a { color: var(--muted); letter-spacing: 0.03em; }
+    nav.links a:hover { color: var(--paper); text-decoration: none; }
+
+    /* HERO */
+    .hero { padding: 72px 0 48px; border-bottom: 1px solid var(--line); }
+    .eyebrow {
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--copper);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 0 16px;
+    }
+    .eyebrow::before { content: ""; width: 20px; height: 1px; background: var(--copper); display: inline-block; }
+    h1 {
+      font-family: var(--mono);
+      font-size: clamp(28px, 3.5vw, 42px);
+      line-height: 1.2;
+      margin: 0 0 18px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+    p.lede { font-size: 17px; color: var(--muted); max-width: 68ch; margin: 0 0 28px; }
+
+    .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+    .tag {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.02em;
+      padding: 5px 10px;
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      color: var(--teal);
+      background: rgba(95,168,160,0.06);
+    }
+
+    /* GRID SECTIONS */
+    .content-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 48px; padding: 56px 0 72px; }
+    .section-block { margin-bottom: 48px; }
+    h2.block-title {
+      font-family: var(--mono);
+      font-size: 20px;
+      color: var(--paper);
+      margin: 0 0 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 10px;
+    }
+    p.block-desc { color: var(--muted); margin: 0 0 16px; font-size: 15px; }
+
+    /* CODE & TERMINAL PANELS */
+    .terminal-panel {
+      background: var(--ink-2);
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--paper);
+      overflow-x: auto;
+      margin: 16px 0 24px;
+    }
+    .terminal-panel .cmd { color: var(--copper); }
+    .terminal-panel .out { color: var(--muted); }
+
+    /* VISUAL CARDS */
+    .visual-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 32px;
+    }
+    .visual-placeholder {
+      width: 100%;
+      height: 240px;
+      border: 1px dashed var(--line-strong);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted-2);
+      font-family: var(--mono);
+      font-size: 12px;
+      text-align: center;
+      background: rgba(20,42,68,0.4);
+      margin-bottom: 12px;
+    }
+    .visual-card img {
+      width: 100%;
+      height: auto;
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      display: block;
+      margin-bottom: 12px;
+    }
+    .caption { font-family: var(--mono); font-size: 12px; color: var(--muted-2); }
+
+    /* SIDEBAR SPECS */
+    .spec-box {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 24px;
+      position: sticky;
+      top: 96px;
+    }
+    .spec-title {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--copper);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin: 0 0 16px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 8px;
+    }
+    .spec-list { list-style: none; margin: 0; padding: 0; font-family: var(--mono); font-size: 13px; }
+    .spec-list li {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+    }
+    .spec-list li span:last-child { color: var(--paper); text-align: right; }
+
+    /* FOOTER */
+    footer { padding: 48px 0; border-top: 1px solid var(--line); font-family: var(--mono); font-size: 12px; color: var(--muted-2); }
+
+    @media (max-width: 880px) {
+      .content-grid { grid-template-columns: 1fr; }
+      .spec-box { position: static; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site">
+    <div class="navbar">
+      <div class="logo"><a href="index.html" style="color:var(--paper);">Andrew Wilkins</a></div>
+      <nav class="links">
+        <a href="index.html#projects">&larr; Back to Portfolio</a>
+        <a href="https://linkedin.com/in/wilkins-andrew" target="_blank" rel="noopener">LinkedIn</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <div class="eyebrow">Architecture &amp; System Deep-Dive</div>
+        <h1>Home Lab NAS &amp; Automated Backup Server</h1>
+        <p class="lede">A dedicated storage appliance deployed on an x86 mini PC running Debian Linux and OpenMediaVault. Built to solve high-volume media archival needs with persistent local network access and automated, hands-off client backups.</p>
+        <div class="tags">
+          <span class="tag">Debian Linux</span>
+          <span class="tag">OpenMediaVault</span>
+          <span class="tag">Samba (SMB)</span>
+          <span class="tag">Apple Time Machine (vfs_fruit)</span>
+          <span class="tag">rsync</span>
+          <span class="tag">S.M.A.R.T. Telemetry</span>
+          <span class="tag">POSIX Permissions</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="wrap content-grid">
+      <div class="main-body">
+
+        <!-- 1. Objectives & Overview -->
+        <div class="section-block">
+          <h2 class="block-title">// 01. Context &amp; Objective</h2>
+          <p class="block-desc">Running a production photography workflow generates terabytes of uncompressed RAW and video assets. Relying on tethered external hard drives created fragmentation, sync bottlenecks, and elevated drive wear. The objective was to engineer an independent, always-on local storage node that delivers:</p>
+          <ul style="color:var(--muted); font-size:15px; padding-left:20px;">
+            <li>High-throughput SMB shares for multi-machine media editing and central archiving.</li>
+            <li>Native, background macOS Time Machine target via Apple-extended Samba modules.</li>
+            <li>Automated data verification, disk health telemetry, and non-blocking background synchronization.</li>
+          </ul>
+        </div>
+
+        <!-- 2. Visual: Hardware Setup -->
+        <div class="section-block">
+          <h2 class="block-title">// 02. Physical Deployment</h2>
+          <div class="visual-card">
+            <!-- Replace this placeholder div with: <img src="images/nas-hardware.jpg" alt="Mini PC hardware setup"> -->
+            <div class="visual-placeholder">
+              [ Hardware Setup Photo: Mini PC, Dual 4TB Drives &amp; Network Switch ]
+            </div>
+            <div class="caption">// Hardware deployment: low-power x86 appliance connected to local gigabit switch.</div>
+          </div>
+        </div>
+
+        <!-- 3. Storage Architecture & Mounting -->
+        <div class="section-block">
+          <h2 class="block-title">// 03. Filesystem Architecture &amp; Persistent UUIDs</h2>
+          <p class="block-desc">To avoid mount failures caused by shifting device names (e.g., <code>/dev/sdb</code> swapping with <code>/dev/sdc</code> on reboot), both 4TB EXT4 arrays were provisioned and mounted explicitly by their immutable filesystem UUIDs inside <code>/etc/fstab</code>.</p>
+          
+          <div class="terminal-panel">
+            <span class="cmd">$ sudo blkid /dev/sd*</span><br>
+            <span class="out">/dev/sda1: UUID="c3a2f891-..." BLOCK_SIZE="4096" TYPE="ext4" PARTUUID="0001a4bc-01"<br>
+/dev/sdb1: UUID="9e4f210d-..." BLOCK_SIZE="4096" TYPE="ext4" PARTUUID="0002b8dc-01"</span><br><br>
+            <span class="cmd">$ sudo lsblk -f</span><br>
+            <span class="out">NAME   FSTYPE FSVER LABEL       UUID                                 MOUNTPOINTS<br>
+sda                                                                           <br>
+└─sda1 ext4   1.0   MEDIA_POOL  c3a2f891-38da-46df-9a11-5321a084fb12 /srv/media<br>
+sdb                                                                           <br>
+└─sdb1 ext4   1.0   BACKUP_POOL 9e4f210d-14a0-410c-8d19-3bf68019a2e4 /srv/timemachine</span>
+          </div>
+        </div>
+
+        <!-- 4. Visual: OMV Dashboard -->
+        <div class="section-block">
+          <h2 class="block-title">// 04. Management Dashboard &amp; Telemetry</h2>
+          <div class="visual-card">
+            <!-- Replace this placeholder div with: <img src="images/omv-dashboard.png" alt="OpenMediaVault GUI Dashboard"> -->
+            <div class="visual-placeholder">
+              [ OpenMediaVault Dashboard Screenshot: Telemetry, CPU/RAM &amp; Storage Volumes ]
+            </div>
+            <div class="caption">// OMV web console providing system health metrics, storage pools, and Samba service status.</div>
+          </div>
+        </div>
+
+        <!-- 5. Protocols & Mac Interoperability -->
+        <div class="section-block">
+          <h2 class="block-title">// 05. Apple Time Machine &amp; Samba Integration</h2>
+          <p class="block-desc">Standard Samba configurations struggle with Apple's native network backup protocol. By pairing <code>vfs_fruit</code> and <code>vfs_catia</code> with extended Samba parameters, macOS recognizes the network share as a valid native Time Machine destination with proper metadata handling.</p>
+          
+          <div class="terminal-panel">
+            <span class="out"># smb.conf fruit module integration snippet</span><br>
+            <span class="cmd">[TimeMachine]</span><br>
+            <span class="out">   path = /srv/timemachine/backups<br>
+   valid users = @users<br>
+   read only = no<br>
+   vfs objects = catia fruit streams_xattr<br>
+   fruit:time machine = yes<br>
+   fruit:time machine max size = 3500G<br>
+   fruit:metadata = stream</span>
+          </div>
+        </div>
+
+        <!-- 6. Migration & Health Monitoring -->
+        <div class="section-block">
+          <h2 class="block-title">// 06. Data Migration &amp; S.M.A.R.T. Telemetry</h2>
+          <p class="block-desc">Initial synchronization moved approximately 1.1TB of archival assets. Transfers were routed through detached <code>screen</code> sessions using <code>rsync</code> with archive preservation flags (<code>-avhP</code>) to prevent dropouts during machine sleep or terminal termination. Disk degradation is guarded via <code>smartd</code> scheduled testing.</p>
+
+          <div class="terminal-panel">
+            <span class="cmd">$ smartctl -H /dev/sda</span><br>
+            <span class="out">smartctl 7.3 2022-02-28 r5338 [x86_64-linux-6.1.0-21-amd64] (local build)<br>
+=== START OF READ SMART DATA SECTION ===<br>
+SMART overall-health self-assessment test result: PASSED</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- SIDEBAR SPEC SHEET -->
+      <aside>
+        <div class="spec-box">
+          <div class="spec-title">// System Specifications</div>
+          <ul class="spec-list">
+            <li><span>Host</span><span>x86 Mini PC</span></li>
+            <li><span>Base OS</span><span>Debian 12 (Bookworm)</span></li>
+            <li><span>Platform</span><span>OpenMediaVault (OMV)</span></li>
+            <li><span>Primary Pool</span><span>4TB EXT4 (UUID Mounted)</span></li>
+            <li><span>Backup Pool</span><span>4TB EXT4 (UUID Mounted)</span></li>
+            <li><span>Networking</span><span>1GbE Ethernet</span></li>
+            <li><span>File Services</span><span>SMB 3.1.1 / Samba</span></li>
+            <li><span>Apple Module</span><span>vfs_fruit + catia</span></li>
+            <li><span>Sync Utility</span><span>rsync + GNU screen</span></li>
+            <li><span>Diagnostics</span><span>smartmontools / smartd</span></li>
+            <li><span>Permissions</span><span>POSIX (775 / root:users)</span></li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <div>// 2026 Andrew Wilkins · Built with HTML &amp; CSS · Hosted on GitHub Pages.</div>
+    </div>
+  </footer>
+
+</body>
+</html>
