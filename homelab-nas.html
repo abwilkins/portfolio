@@ -259,15 +259,92 @@
           </ul>
         </div>
 
-        <!-- 2. Visual: Hardware Setup -->
+        <!-- 2. Physical & Logical Topology -->
         <div class="section-block">
-          <h2 class="block-title">// 02. Physical Deployment</h2>
-          <div class="visual-card">
-            <!-- Replace this placeholder div with: <img src="images/nas-hardware.jpg" alt="Mini PC hardware setup"> -->
-            <div class="visual-placeholder">
-              [ Hardware Setup Photo: Mini PC, Dual 4TB Drives &amp; Network Switch ]
-            </div>
-            <div class="caption">// Hardware deployment: low-power x86 appliance connected to local gigabit switch.</div>
+          <h2 class="block-title">// 02. Appliance & Network Topology</h2>
+          <p class="block-desc">Physical hardware and storage bus routing. The Debian host operates headless on a dedicated static IP, terminating gigabit LAN traffic and distributing IO across isolated USB 3.2 controller channels.</p>
+          <div class="visual-card" style="padding: 24px 16px;">
+            <svg viewBox="0 0 580 340" style="width: 100%; height: auto; display: block;" role="img" aria-label="Home lab NAS hardware and interface topology">
+              <!-- Definitions for marker arrows -->
+              <defs>
+                <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M 0 1 L 10 5 L 0 9 z" fill="rgba(147,178,209,0.4)" />
+                </marker>
+              </defs>
+
+              <style>
+                .t-line { stroke: var(--line-strong); stroke-width: 1.2; fill: none; }
+                .t-bus { stroke: var(--copper); stroke-width: 1.4; stroke-dasharray: 4 3; fill: none; }
+                .t-box { fill: var(--panel-2); stroke: var(--line-strong); stroke-width: 1; rx: 2px; }
+                .t-box-host { fill: rgba(20,42,68,0.7); stroke: var(--copper); stroke-width: 1.5; rx: 3px; }
+                .t-box-pool { fill: var(--ink-2); stroke: var(--teal); stroke-width: 1.2; rx: 2px; }
+                .t-lbl { font-family: var(--mono); font-size: 10px; fill: var(--paper); }
+                .t-sub { font-family: var(--mono); font-size: 8.5px; fill: var(--muted); }
+                .t-tag { font-family: var(--mono); font-size: 8px; fill: var(--copper); }
+              </style>
+
+              <!-- Connection Lines -->
+              <path class="t-line" d="M290,38 L290,70" />
+              <path class="t-line" d="M290,98 L290,130" />
+              <path class="t-bus" d="M210,215 L140,265" />
+              <path class="t-bus" d="M370,215 L440,265" />
+
+              <!-- Router / Gateway -->
+              <g>
+                <rect class="t-box" x="220" y="10" width="140" height="28" />
+                <text class="t-lbl" x="290" y="27" text-anchor="middle">GATEWAY ROUTER</text>
+              </g>
+
+              <!-- Gigabit Switch -->
+              <g>
+                <rect class="t-box" x="210" y="70" width="160" height="28" />
+                <text class="t-lbl" x="290" y="87" text-anchor="middle">1GbE MANAGED SWITCH</text>
+              </g>
+
+              <!-- Mini PC Enclosure (Host Container) -->
+              <g>
+                <rect class="t-box-host" x="120" y="130" width="340" height="85" />
+                <text class="t-tag" x="132" y="148">HOST: x86 MINI PC (DEBIAN 12 / OMV)</text>
+                <text class="t-sub" x="132" y="162">Static IP · Headless SSH · OpenMediaVault 7</text>
+                
+                <!-- Internal Interfaces -->
+                <rect class="t-box" x="132" y="174" width="145" height="30" />
+                <text class="t-lbl" x="204" y="188" text-anchor="middle">USB 3.2 BUS 01</text>
+                <text class="t-sub" x="204" y="198" text-anchor="middle">Host Controller A</text>
+
+                <rect class="t-box" x="303" y="174" width="145" height="30" />
+                <text class="t-lbl" x="375" y="188" text-anchor="middle">USB 3.2 BUS 02</text>
+                <text class="t-sub" x="375" y="198" text-anchor="middle">Host Controller B</text>
+              </g>
+
+              <!-- Storage Pool 1 -->
+              <g>
+                <rect class="t-box-pool" x="50" y="265" width="180" height="52" />
+                <text class="t-lbl" x="140" y="284" text-anchor="middle">MEDIA STORAGE POOL</text>
+                <text class="t-sub" x="140" y="297" text-anchor="middle">4TB EXT4 · UUID Mounted</text>
+                <text class="t-tag" x="140" y="309" text-anchor="middle">SMB Share: /srv/media</text>
+              </g>
+
+              <!-- Storage Pool 2 -->
+              <g>
+                <rect class="t-box-pool" x="350" y="265" width="180" height="52" />
+                <text class="t-lbl" x="440" y="284" text-anchor="middle">TIME MACHINE TARGET</text>
+                <text class="t-sub" x="440" y="297" text-anchor="middle">4TB EXT4 · UUID Mounted</text>
+                <text class="t-tag" x="440" y="309" text-anchor="middle">vfs_fruit: /srv/timemachine</text>
+              </g>
+
+              <!-- Pulses -->
+              <circle class="pulse" r="2.5">
+                <animateMotion dur="2.2s" repeatCount="indefinite" path="M290,98 L290,130" />
+              </circle>
+              <circle class="pulse" r="2.5">
+                <animateMotion dur="2.6s" repeatCount="indefinite" begin="0.4s" path="M210,204 L140,265" />
+              </circle>
+              <circle class="pulse" r="2.5">
+                <animateMotion dur="2.8s" repeatCount="indefinite" begin="0.8s" path="M370,204 L440,265" />
+              </circle>
+            </svg>
+            <div class="caption" style="margin-top: 14px;">// Physical &amp; bus topology: Headless x86 appliance with independent drive channels over 1GbE uplink.</div>
           </div>
         </div>
 
